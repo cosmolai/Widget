@@ -1,0 +1,1279 @@
+%YAML 1.2
+---
+version: 0.0.1
+
+filelist:
+  -
+    path: "."
+    name: "IPFW_BUILD_INFO.txt"
+    content: |2
+      # This file can be used as a document to describe the info needed for a build
+      # or it can be included by a build tool (eg make).
+      #
+      # Rules for this file:
+      # - lines starting with "#" are a comment
+      # - variableName = value1 ... valueN
+      # - all dirs/files are relative to dir containing this file (eg "dir/subdir")
+      # - dir do not have trailing or leading "/"
+      # - this files shall be named "IPFW_BUILD_INFO.txt"  and contained within base dir of IPFW
+
+      # set variable for include paths needed to link external code with IPFW standalone binary
+      IPFW_INCLUDE_PATHS_EXTERNAL = Include
+
+      # set variable for include paths needed by internal compile/link IPFW standalone binary
+      IPFW_INCLUDE_PATHS_INTERNAL = __IPNAME__Lib Registers
+
+      # set variable for source dir needed by for internal source to be compiled/linked into
+      # standalone IPFW binary.
+      IPFW_SOURCE_DIRS_INTERNAL = __IPNAME__Lib
+
+      # Document OPTIONAL build flags (eg "-D") here
+      # eg.
+      # -D__IPNAMEUPPERCASE___PRINT_ALL      : Print out all debug messages
+      # -D__IPNAMEUPPERCASE___PRINT_ERROR    : Print out error messages
+      # -D__IPNAMEUPPERCASE___PRINT_WARNING  : Print out warning messages
+      # -D__IPNAMEUPPERCASE___PRINT_LEVEL1   : Print out level1 messages
+
+      #define REQUIRED build flags (eg "-D") here
+      IPFW_BUILD_FLAGS =
+
+  -
+    path: "Include"
+    name: "__IPNAME__.h"
+    content: |2
+      /** @file
+        IP API for __IPNAME__
+
+        @copyright
+        INTEL CONFIDENTIAL
+        Copyright __COPYRIGHT_YEAR__ Intel Corporation. <BR>
+
+        The source code contained or described herein and all documents related to the
+        source code ("Material") are owned by Intel Corporation or its suppliers or
+        licensors. Title to the Material remains with Intel Corporation or its suppliers
+        and licensors. The Material may contain trade secrets and proprietary    and
+        confidential information of Intel Corporation and its suppliers and licensors,
+        and is protected by worldwide copyright and trade secret laws and treaty
+        provisions. No part of the Material may be used, copied, reproduced, modified,
+        published, uploaded, posted, transmitted, distributed, or disclosed in any way
+        without Intel's prior express written permission.
+
+        No license under any patent, copyright, trade secret or other intellectual
+        property right is granted to or conferred upon you by disclosure or delivery
+        of the Materials, either expressly, by implication, inducement, estoppel or
+        otherwise. Any license under such intellectual property rights must be
+        express and approved by Intel in writing.
+
+        Unless otherwise agreed by Intel in writing, you may not remove or alter
+        this notice or any other notice embedded in Materials by Intel or
+        Intel's suppliers or licensors in any way.
+      **/
+
+      #ifndef ____IPNAMEUPPERCASE___H__
+      #define ____IPNAMEUPPERCASE___H__
+
+      #include <IpCsi.h>
+
+      typedef enum {
+        __IPNAME__FeatIdUnknown = 0,   ///< Unknown
+
+        //<=== NOTE: add new emums to end for backwards compatibility
+      } __IPNAMEUPPERCASE___FEAT_ID;
+
+      typedef enum {
+        __IPNAME__FeatValDis = 0,
+
+        //<=== NOTE: add new emums to end for backwards compatability
+      } __IPNAMEUPPERCASE___FEAT_VAL;
+
+      typedef enum
+      {
+        __IPNAME__EventIdUnknown = 0,
+
+        //<=== NOTE: add new emums to end for backwards compatibility
+      } __IPNAMEUPPERCASE___EVENT_ID;
+
+      typedef enum
+      {
+        __IPNAME__EventValUnknown = 0,
+
+        //<=== NOTE: add new emums to end for backwards compatibility
+      } __IPNAMEUPPERCASE___EVENT_VAL;
+
+      typedef struct ___IPNAMEUPPERCASE___INST __IPNAMEUPPERCASE___INST;
+      struct ___IPNAMEUPPERCASE___INST {
+        IP_CSI_INST_PREFIX  Prefix;
+        //<=== NOTE: add new fields to end for backwards compatibility
+      };
+
+      /**
+        Get version information
+
+        @param[in]  pInst  The instance
+        @param[in]  VerId  Version ID
+
+        @retval     Return value define by VerId
+      **/
+      UINT32
+      __IPNAME__GetVersion (
+        __IPNAMEUPPERCASE___INST  *pInst,
+        IP_CSI_VER_ID  VerId
+        );
+
+      /**
+        Set event.
+
+        @param[in]      pInst the instance
+        @param[in]      IpTarget IP defined value for target within the IP.
+        @param[in]      EventId
+        @param[in]      EventVal value based on EventId
+
+        @retval         IpCsiStsSuccess on success
+        @retval         IpCsiStsErrorUnknownId when EventId unknown
+        @retval         !IpCsiStsSuccess on failure
+      **/
+      IP_CSI_STATUS
+      __IPNAME__SetEvent (
+        __IPNAMEUPPERCASE___INST  *pInst,
+        UINT32  IpTarget,
+        __IPNAMEUPPERCASE___EVENT_ID  EventId,
+        UINT32  EventVal
+        );
+
+      /**
+        Get capability
+
+        @param[in]      pInst      The instance
+        @param[in]      IpTarget   IP defined value for target within the IP.
+        @param[in]      FeatureId  Cap ID
+        @param[in, out] pApiSts    Optional and may be NULL.  If non-NULL return API status
+
+        @retval         defined by FeatureId and may be in __IPNAMEUPPERCASE___FEAT_VAL
+      **/
+      UINT32
+      __IPNAME__GetCapability (
+        __IPNAMEUPPERCASE___INST  *pInst,
+        UINT32  IpTarget,
+        __IPNAMEUPPERCASE___FEAT_ID  FeatureId,
+        IP_CSI_STATUS  *pApiSts
+        );
+
+      /**
+        Get status
+
+        @param[in]      pInst      The instance
+        @param[in]      IpTarget   IP defined value for target within the IP.
+        @param[in]      FeatureId  Status ID
+        @param[in, out] pApiSts    Optional and may be NULL.  If non-NULL return API status
+
+        @retval         defined by FeatureId and may be in __IPNAMEUPPERCASE___FEAT_VAL
+      **/
+      UINT32
+      __IPNAME__GetStatus (
+        __IPNAMEUPPERCASE___INST  *pInst,
+        UINT32  IpTarget,
+        __IPNAMEUPPERCASE___FEAT_ID  FeatureId,
+        IP_CSI_STATUS  *pApiSts
+        );
+
+      /**
+        Get control
+
+        @param[in]      pInst      The instance
+        @param[in]      IpTarget   IP defined value for target within the IP.
+        @param[in]      FeatureId  Control ID
+        @param[in, out] pApiSts    Optional and may be NULL.  If non-NULL return API status
+
+        @retval         defined by FeatureId and may be in __IPNAMEUPPERCASE___FEAT_VAL
+      **/
+      UINT32
+      __IPNAME__GetControl (
+        __IPNAMEUPPERCASE___INST  *pInst,
+        UINT32  IpTarget,
+        __IPNAMEUPPERCASE___FEAT_ID  FeatureId,
+        IP_CSI_STATUS  *pApiSts
+        );
+
+      /**
+        Set control
+
+        @param[in]  pInst       The instance
+        @param[in]  IpTarget    IP defined value for target within the IP.
+        @param[in]  FeatureId   Feature ID
+        @param[in]  FeatureVal  defined by FeatureId and may be in __IPNAMEUPPERCASE___FEAT_VAL
+
+        @retval     IpCsiStsSuccess on success
+        @retval     !IpCsiStsSuccess on failure
+      **/
+      IP_CSI_STATUS
+      __IPNAME__SetControl (
+        __IPNAMEUPPERCASE___INST  *pInst,
+        UINT32  IpTarget,
+        __IPNAMEUPPERCASE___FEAT_ID  FeatureId,
+        UINT32  FeatureVal
+        );
+
+      /**
+        Since InstInit is not allowed to access any registers, IpInit is used to write to any registers needed.
+        * IpInit() shall be the first API function called after InstInit.
+        * this is a good place to fix bad register defaults or work around bugs
+
+        @param[in]  pInst  The instance
+
+        @retval     IpCsiStsSuccess on success
+        @retval     !IpCsiStsSuccess on failure
+      **/
+      IP_CSI_STATUS
+      __IPNAME__IpInit (
+        __IPNAMEUPPERCASE___INST  *pInst
+        );
+
+      /**
+        InstInit for this version of IP
+
+        @param[in]  pInst  The instance
+
+        @retval     IpCsiStsSuccess on success
+        @retval     !IpCsiStsSuccess on failure
+      **/
+      IP_CSI_STATUS
+      __IPNAME__InstInit (
+        __IPNAMEUPPERCASE___INST  *pInst
+        );
+
+      #endif // ____IPNAMEUPPERCASE___H__
+
+  -
+    path: "__IPNAME__Lib"
+    name: "__IPNAME__Lib.c"
+    content: |2
+      /** @file
+        IP lib for __IPNAME__
+
+        @copyright
+        INTEL CONFIDENTIAL
+        Copyright __COPYRIGHT_YEAR__ Intel Corporation. <BR>
+
+        The source code contained or described herein and all documents related to the
+        source code ("Material") are owned by Intel Corporation or its suppliers or
+        licensors. Title to the Material remains with Intel Corporation or its suppliers
+        and licensors. The Material may contain trade secrets and proprietary    and
+        confidential information of Intel Corporation and its suppliers and licensors,
+        and is protected by worldwide copyright and trade secret laws and treaty
+        provisions. No part of the Material may be used, copied, reproduced, modified,
+        published, uploaded, posted, transmitted, distributed, or disclosed in any way
+        without Intel's prior express written permission.
+
+        No license under any patent, copyright, trade secret or other intellectual
+        property right is granted to or conferred upon you by disclosure or delivery
+        of the Materials, either expressly, by implication, inducement, estoppel or
+        otherwise. Any license under such intellectual property rights must be
+        express and approved by Intel in writing.
+
+        Unless otherwise agreed by Intel in writing, you may not remove or alter
+        this notice or any other notice embedded in Materials by Intel or
+        Intel's suppliers or licensors in any way.
+      **/
+
+      #include <IpCsi.h>
+      #include <IpCsiReg.h>
+      #include <__IPNAME__.h>
+      #include <IpWrapper.h>
+      #include <IpWrapper64Bit.h>
+
+      /**
+        Get version information
+
+        @param[in]  pInst  The instance
+        @param[in]  VerId  Version ID
+
+        @retval     Return value define by VerId
+      **/
+      UINT32
+      __IPNAME__GetVersion (
+        __IPNAMEUPPERCASE___INST  *pInst,
+        IP_CSI_VER_ID  VerId
+        )
+      {
+        UINT32 Ret = 0;
+
+        if (pInst == NULL) {
+          return 0;
+        }
+        switch (VerId) {
+          case IpCsiVerIdCsi:
+            Ret = VERSION_CSI;
+            break;
+          case IpCsiVerIdHwIp:
+            Ret = 0;
+            break;
+          case IpCsiVerIdIpFwIntf:
+            Ret = 0;
+            break;
+          case IpCsiVerIdIpFwIntfExt:
+            Ret = 0;
+            break;
+          case IpCsiVerIdIpFw:
+            Ret = 0;
+            break;
+          case IpCsiVerIdHwIpCustom:
+            Ret = 0;
+            break;
+          default:
+            //PRINT_WARNING ("GetVersion(%d) is not supported\n", VerId);
+            Ret = 0;
+            break;
+        }
+
+        return Ret;
+      }
+
+      /**
+        Set event.
+
+        @param[in]      pInst the instance
+        @param[in]      IpTarget IP defined value for target within the IP.
+        @param[in]      EventId
+        @param[in]      EventVal value based on EventId
+
+        @retval         IpCsiStsSuccess on success
+        @retval         IpCsiStsErrorUnknownId when EventId unknown
+        @retval         !IpCsiStsSuccess on failure
+      **/
+      IP_CSI_STATUS
+      __IPNAME__SetEvent (
+        __IPNAMEUPPERCASE___INST  *pInst,
+        UINT32  IpTarget,
+        __IPNAMEUPPERCASE___EVENT_ID  EventId,
+        UINT32  EventVal
+        )
+      {
+        return IpCsiStsSuccess;
+      }
+
+      /**
+        Get capability
+
+        @param[in]      pInst      The instance
+        @param[in]      IpTarget   IP defined value for target within the IP.
+        @param[in]      FeatureId  Cap ID
+        @param[in, out] pApiSts    Optional and may be NULL.  If non-NULL return API status
+
+        @retval         defined by FeatureId
+      **/
+      UINT32
+      __IPNAME__GetCapability (
+        __IPNAMEUPPERCASE___INST  *pInst,
+        UINT32  IpTarget,
+        __IPNAMEUPPERCASE___FEAT_ID  FeatureId,
+        IP_CSI_STATUS  *pApiSts
+        )
+      {
+        if (pApiSts != NULL) {
+          *pApiSts = IpCsiStsSuccess;
+        }
+        return __IPNAME__FeatValDis;
+      }
+
+      /**
+        Get status
+
+        @param[in]      pInst      The instance
+        @param[in]      IpTarget   IP defined value for target within the IP.
+        @param[in]      FeatureId  Status ID
+        @param[in, out] pApiSts    Optional and may be NULL.  If non-NULL return API status
+
+        @retval         defined by FeatureId
+      **/
+      UINT32
+      __IPNAME__GetStatus (
+        __IPNAMEUPPERCASE___INST  *pInst,
+        UINT32  IpTarget,
+        __IPNAMEUPPERCASE___FEAT_ID  FeatureId,
+        IP_CSI_STATUS  *pApiSts
+        )
+      {
+        if (pApiSts != NULL) {
+          *pApiSts = IpCsiStsSuccess;
+        }
+        return __IPNAME__FeatValDis;
+      }
+
+      /**
+        Get control
+
+        @param[in]      pInst      The instance
+        @param[in]      IpTarget   IP defined value for target within the IP.
+        @param[in]      FeatureId  Control ID
+        @param[in, out] pApiSts    Optional and may be NULL.  If non-NULL return API status
+
+        @retval         defined by FeatureId
+      **/
+      UINT32
+      __IPNAME__GetControl (
+        __IPNAMEUPPERCASE___INST  *pInst,
+        UINT32  IpTarget,
+        __IPNAMEUPPERCASE___FEAT_ID  FeatureId,
+        IP_CSI_STATUS  *pApiSts
+        )
+      {
+        if (pApiSts != NULL) {
+          *pApiSts = IpCsiStsSuccess;
+        }
+        return __IPNAME__FeatValDis;
+      }
+
+      /**
+        Set control
+
+        @param[in]  pInst       The instance
+        @param[in]  IpTarget    IP defined value for target within the IP.
+        @param[in]  FeatureId   Feature ID
+        @param[in]  FeatureVal  Value based on FeatureId
+
+        @retval     IpCsiStsSuccess on success
+        @retval     !IpCsiStsSuccess on failure
+      **/
+      IP_CSI_STATUS
+      __IPNAME__SetControl (
+        __IPNAMEUPPERCASE___INST  *pInst,
+        UINT32  IpTarget,
+        __IPNAMEUPPERCASE___FEAT_ID  FeatureId,
+        UINT32  FeatureVal
+        )
+      {
+        return IpCsiStsSuccess;
+      }
+
+      /**
+        Since InstInit is not allowed to access any registers, IpInit is used to write to any registers needed.
+        * IpInit() shall be the first API function called after InstInit.
+        * this is a good place to fix bad register defaults or work around bugs
+
+        @param[in]  pInst  The instance
+
+        @retval     IpCsiStsSuccess on success
+        @retval     !IpCsiStsSuccess on failure
+      **/
+      IP_CSI_STATUS
+      __IPNAME__IpInit (
+        __IPNAMEUPPERCASE___INST  *pInst
+        )
+      {
+        return IpCsiStsSuccess;
+      }
+
+      /**
+        InstInit for this version of IP
+
+        @param[in]  pInst  The instance
+
+        @retval     IpCsiStsSuccess on success
+        @retval     !IpCsiStsSuccess on failure
+      **/
+      IP_CSI_STATUS
+      __IPNAME__InstInit (
+        __IPNAMEUPPERCASE___INST  *pInst
+        )
+      {
+        return IpCsiStsSuccess;
+      }
+
+  -
+    path: "Registers"
+    name: "ENDPOINT0.h"
+    content: |2
+      /** @file
+        ENDPOINT0.h
+
+        @copyright
+        INTEL CONFIDENTIAL
+        Copyright __COPYRIGHT_YEAR__ Intel Corporation. <BR>
+
+        The source code contained or described herein and all documents related to the
+        source code ("Material") are owned by Intel Corporation or its suppliers or
+        licensors. Title to the Material remains with Intel Corporation or its suppliers
+        and licensors. The Material may contain trade secrets and proprietary and
+        confidential information of Intel Corporation and its suppliers and licensors,
+        and is protected by worldwide copyright and trade secret laws and treaty
+        provisions. No part of the Material may be used, copied, reproduced, modified,
+        published, uploaded, posted, transmitted, distributed, or disclosed in any way
+        without Intel's prior express written permission.
+
+        No license under any patent, copyright, trade secret or other intellectual
+        property right is granted to or conferred upon you by disclosure or delivery
+        of the Materials, either expressly, by implication, inducement, estoppel or
+        otherwise. Any license under such intellectual property rights must be
+        express and approved by Intel in writing.
+
+        Unless otherwise agreed by Intel in writing, you may not remove or alter
+        this notice or any other notice embedded in Materials by Intel or
+        Intel's suppliers or licensors in any way.
+
+        This file contains Silicon register definitions.
+
+        This is a generated file; please do not modify it directly.
+
+      **/
+
+      #ifndef _ENDPOINT0_h
+      #define _ENDPOINT0_h
+
+      // IP GUID: 00000000-0000-0000-0000-000000000001
+      #define ENDPOINT0_ID 0x0000000000000001
+
+      //************************************************ RegisterStructs
+
+
+      /** EP0_REG0 desc:
+        * Register default value:        0x02110001
+        * Register file full path in IP: xxx/xxx
+        * Security PolicyGroup: xxx
+        * EP0_REG0
+        */
+
+      #define EP0_REG0_REG     (0x00000000U)
+
+      typedef union {
+        struct {
+          UINT32 reserved: 32;
+        }     Bits;
+        UINT32 Data;
+      } EP0_REG0_STRUCT;
+
+      #define EP0_REG0_WIDTH 32
+      #define EP0_REG0_ENDPOINT ENDPOINT0
+
+
+      /** EP0_REG1 desc:
+        * Register default value:        0x80010005
+        * Register file full path in IP: xxx/xxx
+        * Security PolicyGroup: xxx
+        * EP0_REG1
+        */
+
+      #define EP0_REG1_REG (0x00000004U)
+
+      typedef union {
+        struct {
+          UINT32 reserved : 32;
+        }     Bits;
+        UINT32 Data;
+      } EP0_REG1_STRUCT;
+
+      #define EP0_REG1_WIDTH 32
+      #define EP0_REG1_ENDPOINT ENDPOINT0
+
+
+      /** EP0_REG2 desc:
+        * Register default value:        0x00000000
+        * Register file full path in IP: xxx/xxx
+        * Security PolicyGroup: xxx
+        * EP0_REG2
+        */
+
+      #define EP0_REG2_REG (0x00000008U)
+
+      typedef union {
+        struct {
+          UINT32 reserved : 32;
+        }     Bits;
+        UINT32 Data;
+      } EP0_REG2_STRUCT;
+
+      #define EP0_REG2_WIDTH 32
+      #define EP0_REG2_ENDPOINT ENDPOINT0
+
+
+      #endif // _ENDPOINT0_h
+
+  -
+    path: "Registers"
+    name: "ENDPOINT1.h"
+    content: |2
+      /** @file
+        ENDPOINT1.h
+
+        @copyright
+        INTEL CONFIDENTIAL
+        Copyright __COPYRIGHT_YEAR__ Intel Corporation. <BR>
+
+        The source code contained or described herein and all documents related to the
+        source code ("Material") are owned by Intel Corporation or its suppliers or
+        licensors. Title to the Material remains with Intel Corporation or its suppliers
+        and licensors. The Material may contain trade secrets and proprietary and
+        confidential information of Intel Corporation and its suppliers and licensors,
+        and is protected by worldwide copyright and trade secret laws and treaty
+        provisions. No part of the Material may be used, copied, reproduced, modified,
+        published, uploaded, posted, transmitted, distributed, or disclosed in any way
+        without Intel's prior express written permission.
+
+        No license under any patent, copyright, trade secret or other intellectual
+        property right is granted to or conferred upon you by disclosure or delivery
+        of the Materials, either expressly, by implication, inducement, estoppel or
+        otherwise. Any license under such intellectual property rights must be
+        express and approved by Intel in writing.
+
+        Unless otherwise agreed by Intel in writing, you may not remove or alter
+        this notice or any other notice embedded in Materials by Intel or
+        Intel's suppliers or licensors in any way.
+
+        This file contains Silicon register definitions.
+
+        This is a generated file; please do not modify it directly.
+
+      **/
+
+      #ifndef _ENDPOINT1_h
+      #define _ENDPOINT1_h
+
+      // IP GUID: 00000000-0000-0000-0000-000000000002
+      #define ENDPOINT1_ID 0x0000000000000002
+
+      //************************************************ RegisterStructs
+
+
+      /** EP1_REG0 desc:
+        * Register default value:        0x03110001
+        * Register file full path in IP: xxx/xxx
+        * Security PolicyGroup: xxx
+        * EP1_REG0
+        */
+
+      #define EP1_REG0_REG     (0x00000000U)
+
+      typedef union {
+        struct {
+          UINT32 reserved: 32;
+        }     Bits;
+        UINT32 Data;
+      } EP1_REG0_STRUCT;
+
+      #define EP1_REG0_WIDTH 32
+      #define EP1_REG0_ENDPOINT ENDPOINT1
+
+
+      /** EP1_REG1 desc:
+        * Register default value:        0x10020002
+        * Register file full path in IP: xxx/xxx
+        * Security PolicyGroup: xxx
+        * EP1_REG1
+        */
+
+      #define EP1_REG1_REG (0x00000004U)
+
+      typedef union {
+        struct {
+          UINT32 reserved : 32;
+        }     Bits;
+        UINT32 Data;
+      } EP1_REG1_STRUCT;
+
+      #define EP1_REG1_WIDTH 32
+      #define EP1_REG1_ENDPOINT ENDPOINT1
+
+
+      /** EP1_REG2 desc:
+        * Register default value:        0x00000010
+        * Register file full path in IP: xxx/xxx
+        * Security PolicyGroup: xxx
+        * EP1_REG2
+        */
+
+      #define EP1_REG2_REG (0x00000008U)
+
+      typedef union {
+        struct {
+          UINT32 reserved : 32;
+        }     Bits;
+        UINT32 Data;
+      } EP1_REG2_STRUCT;
+
+      #define EP1_REG2_WIDTH 32
+      #define EP1_REG2_ENDPOINT ENDPOINT1
+
+
+      #endif // _ENDPOINT1_h
+
+  -
+    path: "IpSimSupportRestricted"
+    name: "__IPNAME___ipsim_reggen.bat"
+    content: |2
+      py -3 __INTEL_PATH__/SimulationPkg/IpSimRestricted/Tools/ipsim_regmap_gen.py ^
+      -i "../Registers/ENDPOINT0.h" ^
+      -i "../Registers/ENDPOINT1.h" ^
+      -o "."
+
+  -
+    path: "IpSimSupportRestricted"
+    name: "CMakeLists.txt"
+    content: |2
+      cmake_minimum_required(VERSION 3.14)
+
+      project(ipsim)
+
+      set(IPSIMSUPPORT_DIR ${CMAKE_CURRENT_LIST_DIR})
+      set(INTEL_DIR __INTEL_PATH__)
+      set(IPFW_DIR ${IPSIMSUPPORT_DIR}/../)
+
+      include(${INTEL_DIR}/SimulationPkg/IpSimRestricted/ipsim.cmake)
+      include(${INTEL_DIR}/SimulationPkg/IpSimRestricted/ipfwbuildinfo.cmake)
+      include(${INTEL_DIR}/SimulationPkg/IpSimRestricted/google_test.cmake)
+
+      include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
+      include_directories(${gmock_SOURCE_DIR}/include ${gmock_SOURCE_DIR})
+
+      # =========================ipfw===================================
+
+      # This contains the path where ipfw header files locate
+      include_directories(${IPFW_INCLUDE_PATHS_EXTERNAL})
+      include_directories(${IPFW_INCLUDE_PATHS_INTERNAL})
+      # This defines objects of IPFW.
+      # Each IPFW should update this according to the folder path.
+      set(ipfw_lib_files "")
+      foreach(dir ${IPFW_SOURCE_DIRS_INTERNAL})
+        file(GLOB temp ${dir}/*.c)
+        list(APPEND ipfw_lib_files ${temp})
+      endforeach()
+      add_library(ipfw_lib ${ipfw_lib_files})
+      target_compile_options(ipfw_lib PRIVATE ${IPFW_BUILD_FLAGS})
+
+      # =========================ipfw end===================================
+
+
+      # =========================ipsim support===================================
+
+      # This specifies the include path for IpSimRegMap.h
+      include_directories(${IPSIMSUPPORT_DIR})
+
+
+      # This is the ipsim support library
+      file(GLOB ipsim_support_src ${IPSIMSUPPORT_DIR}/*.c ${IPSIMSUPPORT_DIR}/*.cpp)
+      add_library(ipsim_support_lib ${ipsim_support_src})
+
+      # =========================ipsim support end===================================
+
+      target_link_libraries(ipsim ipsim_support_lib ipfw_lib ipwr_lib)
+      target_link_libraries(ipsim gtest_main)
+
+  -
+    path: "IpSimSupportRestricted"
+    name: "IpSimRegisterhandler.c"
+    content: |2
+      /** @file
+        IpSim support register handler
+
+        @copyright
+        INTEL CONFIDENTIAL
+        Copyright __COPYRIGHT_YEAR__ Intel Corporation. <BR>
+
+        The source code contained or described herein and all documents related to the
+        source code ("Material") are owned by Intel Corporation or its suppliers or
+        licensors. Title to the Material remains with Intel Corporation or its suppliers
+        and licensors. The Material may contain trade secrets and proprietary    and
+        confidential information of Intel Corporation and its suppliers and licensors,
+        and is protected by worldwide copyright and trade secret laws and treaty
+        provisions. No part of the Material may be used, copied, reproduced, modified,
+        published, uploaded, posted, transmitted, distributed, or disclosed in any way
+        without Intel's prior express written permission.
+
+        No license under any patent, copyright, trade secret or other intellectual
+        property right is granted to or conferred upon you by disclosure or delivery
+        of the Materials, either expressly, by implication, inducement, estoppel or
+        otherwise. Any license under such intellectual property rights must be
+        express and approved by Intel in writing.
+
+        Unless otherwise agreed by Intel in writing, you may not remove or alter
+        this notice or any other notice embedded in Materials by Intel or
+        Intel's suppliers or licensors in any way.
+      **/
+
+      #include <stdio.h>
+      #include <IpSim.h>
+      #include <IpSimLib.h>
+      #include <IpSimRegMap.h>
+
+      void
+      EndPoint0RegisterHandler0000 (
+        UINT32          EndPoint,
+        UINT32          Socket,
+        UINT32          Index,
+        UINT32          Offset,
+        UINT32          Width,
+        UINT64          Data64,
+        ACCESS_TYPE     AccessType,
+        EXECUTION_PHASE ExecutionPhase
+        )
+      {
+        UINT64 TempData64;
+
+        printf ("%s %x %x %x %llx %x\n", __FUNCTION__, EndPoint, Offset, Width, Data64, AccessType);
+        TempData64 = IpSimDirectReadRegMap (EndPoint, Socket, Index, Offset, Width);
+        IpSimDirectWriteRegMap (EndPoint, Socket, Index, Offset, TempData64, Width);
+      }
+
+      IPSIM_REGMAP_PATCH_TABLE __IPNAME__RegMapPatchTable[] = {
+        {ENDPOINT0, 0x00000000, ~0, 0, EndPoint0RegisterHandler0000}
+      };
+
+      UINT32 __IPNAME__RegMapPatchTableSize = sizeof (__IPNAME__RegMapPatchTable) / sizeof (IPSIM_REGMAP_PATCH_TABLE);
+
+  -
+    path: "IpSimSupportRestricted"
+    name: "IpSimRegMap.c"
+    content: |2
+
+      /** @file
+        Create register map table
+
+        NOTE: THIS FILE IS AUTO GENERATED. DO NOT MODIFY THIS FILE.
+
+        @copyright
+        INTEL CONFIDENTIAL
+        Copyright __COPYRIGHT_YEAR__ Intel Corporation. <BR>
+
+        The source code contained or described herein and all documents related to the
+        source code ("Material") are owned by Intel Corporation or its suppliers or
+        licensors. Title to the Material remains with Intel Corporation or its suppliers
+        and licensors. The Material may contain trade secrets and proprietary    and
+        confidential information of Intel Corporation and its suppliers and licensors,
+        and is protected by worldwide copyright and trade secret laws and treaty
+        provisions. No part of the Material may be used, copied, reproduced, modified,
+        published, uploaded, posted, transmitted, distributed, or disclosed in any way
+        without Intel's prior express written permission.
+
+        No license under any patent, copyright, trade secret or other intellectual
+        property right is granted to or conferred upon you by disclosure or delivery
+        of the Materials, either expressly, by implication, inducement, estoppel or
+        otherwise. Any license under such intellectual property rights must be
+        express and approved by Intel in writing.
+
+        Unless otherwise agreed by Intel in writing, you may not remove or alter
+        this notice or any other notice embedded in Materials by Intel or
+        Intel's suppliers or licensors in any way.
+      **/
+
+      #include <IpSim.h>
+      #include <IpSimRegMap.h>
+
+      IPSIM_REGMAP_ENTRY mENDPOINT0_RegMap[] = {
+        {0x00000000,   32, 0x02110001, "EP0_REG0                                        ", 0x00000000, {0} },
+        {0x00000004,   32, 0x80010005, "EP0_REG1                                        ", 0x00000000, {0} },
+        {0x00000008,   32, 0x00000000, "EP0_REG2                                        ", 0x00000000, {0} }
+      };
+
+      IPSIM_REGMAP_TABLE mENDPOINT0_RegMapTable = {
+        {
+          ENDPOINT0, //EndPoint
+          sizeof (mENDPOINT0_RegMap) / sizeof (IPSIM_REGMAP_ENTRY), //Size
+          0, //Socket
+          0, //Index
+          "ENDPOINT0" //Name
+        },
+        mENDPOINT0_RegMap
+      };
+
+      IPSIM_REGMAP_ENTRY mENDPOINT1_RegMap[] = {
+        {0x00000000,   32, 0x03110001, "EP1_REG0                                        ", 0x00000000, {0} },
+        {0x00000004,   32, 0x10020002, "EP1_REG1                                        ", 0x00000000, {0} },
+        {0x00000008,   32, 0x00000010, "EP1_REG2                                        ", 0x00000000, {0} }
+      };
+
+      IPSIM_REGMAP_TABLE mENDPOINT1_RegMapTable = {
+        {
+          ENDPOINT1, //EndPoint
+          sizeof (mENDPOINT1_RegMap) / sizeof (IPSIM_REGMAP_ENTRY), //Size
+          0, //Socket
+          0, //Index
+          "ENDPOINT1" //Name
+        },
+        mENDPOINT1_RegMap
+      };
+
+
+      IPSIM_REGMAP_TABLE *mRegMapTableList[] = {
+        &mENDPOINT0_RegMapTable,
+        &mENDPOINT1_RegMapTable
+      };
+
+      UINT32 mRegMapTableListSize = sizeof (mRegMapTableList) / sizeof (IPSIM_REGMAP_TABLE *);
+
+  -
+    path: "IpSimSupportRestricted"
+    name: "IpSimRegMap.h"
+    content: |2
+
+      /** @file
+        IpSim register map definitions
+
+        NOTE: THIS FILE IS AUTO GENERATED. DO NOT MODIFY THIS FILE.
+
+        @copyright
+        INTEL CONFIDENTIAL
+        Copyright __COPYRIGHT_YEAR__ Intel Corporation. <BR>
+
+        The source code contained or described herein and all documents related to the
+        source code ("Material") are owned by Intel Corporation or its suppliers or
+        licensors. Title to the Material remains with Intel Corporation or its suppliers
+        and licensors. The Material may contain trade secrets and proprietary    and
+        confidential information of Intel Corporation and its suppliers and licensors,
+        and is protected by worldwide copyright and trade secret laws and treaty
+        provisions. No part of the Material may be used, copied, reproduced, modified,
+        published, uploaded, posted, transmitted, distributed, or disclosed in any way
+        without Intel's prior express written permission.
+
+        No license under any patent, copyright, trade secret or other intellectual
+        property right is granted to or conferred upon you by disclosure or delivery
+        of the Materials, either expressly, by implication, inducement, estoppel or
+        otherwise. Any license under such intellectual property rights must be
+        express and approved by Intel in writing.
+
+        Unless otherwise agreed by Intel in writing, you may not remove or alter
+        this notice or any other notice embedded in Materials by Intel or
+        Intel's suppliers or licensors in any way.
+      **/
+
+      #ifndef __IPSIM_REGMAP_H__
+      #define __IPSIM_REGMAP_H__
+
+
+      typedef enum {
+        ENDPOINT0,
+        ENDPOINT1,
+        EnumRegMapEndPointMax
+      } REGMAP_ENDPOINT;
+
+      extern IPSIM_REGMAP_TABLE *mRegMapTableList[];
+      extern UINT32 mRegMapTableListSize;
+
+      #endif // __IPSIM_REGMAP_H__
+
+  -
+    path: "IpSimSupportRestricted"
+    name: "IpSimSupport.c"
+    content: |2
+      /** @file
+        IpSim support
+
+        @copyright
+        INTEL CONFIDENTIAL
+        Copyright __COPYRIGHT_YEAR__ Intel Corporation. <BR>
+
+        The source code contained or described herein and all documents related to the
+        source code ("Material") are owned by Intel Corporation or its suppliers or
+        licensors. Title to the Material remains with Intel Corporation or its suppliers
+        and licensors. The Material may contain trade secrets and proprietary    and
+        confidential information of Intel Corporation and its suppliers and licensors,
+        and is protected by worldwide copyright and trade secret laws and treaty
+        provisions. No part of the Material may be used, copied, reproduced, modified,
+        published, uploaded, posted, transmitted, distributed, or disclosed in any way
+        without Intel's prior express written permission.
+
+        No license under any patent, copyright, trade secret or other intellectual
+        property right is granted to or conferred upon you by disclosure or delivery
+        of the Materials, either expressly, by implication, inducement, estoppel or
+        otherwise. Any license under such intellectual property rights must be
+        express and approved by Intel in writing.
+
+        Unless otherwise agreed by Intel in writing, you may not remove or alter
+        this notice or any other notice embedded in Materials by Intel or
+        Intel's suppliers or licensors in any way.
+      **/
+
+      #include <stdio.h>
+      #include <stdlib.h>
+      #include <string.h>
+      #include <assert.h>
+
+      #include <IpSim.h>
+      #include <IpSimLib.h>
+      #include <IpSimRegMap.h>
+
+      #include <__IPNAME__.h>
+      #include <IpSimSupport.h>
+
+      __IPNAMEUPPERCASE___INST m__IPNAME__InstancesPtr[MAX_SOCKET][MAX_PORT_PER_SOCKET];
+
+      //
+      // Reference IpSimRegisterHandler.c
+      //
+      extern IPSIM_REGMAP_PATCH_TABLE __IPNAME__RegMapPatchTable[];
+      extern UINT32 __IPNAME__RegMapPatchTableSize;
+
+      /**
+        Provide register map patch table.
+
+        IpSimSupport can use this table to override the default setting in
+        regmap template and hook the register handler.
+
+        @param[in]   SelectId             This argument specifies the version of patch table want to use.
+        @param[out]  RegMapPatchTable     The return patch table corresponding to SelectId
+
+        @retval      UINT32               Return the patch table size.
+      **/
+      UINT32
+      IpSimGetRegisterPatchTable (
+        UINT32                   SelectId,
+        IPSIM_REGMAP_PATCH_TABLE **RegMapPatchTable
+        )
+      {
+        // Select the patch table specified by SelectId
+        switch (SelectId) {
+          case 0:
+          default:
+            *RegMapPatchTable = __IPNAME__RegMapPatchTable;
+            return __IPNAME__RegMapPatchTableSize;
+        }
+      }
+
+      /**
+        Init all IpInst.
+      **/
+      static
+      void
+      CreateIpInst (
+        void
+        )
+      {
+        printf ("%s\n", __FUNCTION__);
+        //assert (1 != 1);
+      }
+
+      /**
+        Init IpInst and test each IPFW API
+      **/
+      static
+      void
+      IpInitAndTest (
+        void
+        )
+      {
+        printf ("%s\n", __FUNCTION__);
+        //assert (2 != 2);
+      }
+
+      /**
+        Init the IpInst and test all IPFW APIs.
+      **/
+      void
+      IpSimIpfwDispatcher (
+        void
+        )
+      {
+        CreateIpInst ();
+        IpInitAndTest ();
+      }
+
+  -
+    path: "IpSimSupportRestricted"
+    name: "IpSimSupport.h"
+    content: |2
+      /** @file
+        IpSim support definitions
+
+        @copyright
+        INTEL CONFIDENTIAL
+        Copyright __COPYRIGHT_YEAR__ Intel Corporation. <BR>
+
+        The source code contained or described herein and all documents related to the
+        source code ("Material") are owned by Intel Corporation or its suppliers or
+        licensors. Title to the Material remains with Intel Corporation or its suppliers
+        and licensors. The Material may contain trade secrets and proprietary    and
+        confidential information of Intel Corporation and its suppliers and licensors,
+        and is protected by worldwide copyright and trade secret laws and treaty
+        provisions. No part of the Material may be used, copied, reproduced, modified,
+        published, uploaded, posted, transmitted, distributed, or disclosed in any way
+        without Intel's prior express written permission.
+
+        No license under any patent, copyright, trade secret or other intellectual
+        property right is granted to or conferred upon you by disclosure or delivery
+        of the Materials, either expressly, by implication, inducement, estoppel or
+        otherwise. Any license under such intellectual property rights must be
+        express and approved by Intel in writing.
+
+        Unless otherwise agreed by Intel in writing, you may not remove or alter
+        this notice or any other notice embedded in Materials by Intel or
+        Intel's suppliers or licensors in any way.
+      **/
+
+      //
+      // This file contains the common definitions between IpSimSupport.c and TestCases.cpp
+      //
+      #define MAX_SOCKET 2
+      #define MAX_PORT_PER_SOCKET 2
+
+      extern __IPNAMEUPPERCASE___INST m__IPNAME__InstancesPtr[MAX_SOCKET][MAX_PORT_PER_SOCKET];
+
+  -
+    path: "IpSimSupportRestricted"
+    name: "TestCases.cpp"
+    content: |2
+      /** @file
+        IpSim unit test
+
+        @copyright
+        INTEL CONFIDENTIAL
+        Copyright __COPYRIGHT_YEAR__ Intel Corporation. <BR>
+
+        The source code contained or described herein and all documents related to the
+        source code ("Material") are owned by Intel Corporation or its suppliers or
+        licensors. Title to the Material remains with Intel Corporation or its suppliers
+        and licensors. The Material may contain trade secrets and proprietary    and
+        confidential information of Intel Corporation and its suppliers and licensors,
+        and is protected by worldwide copyright and trade secret laws and treaty
+        provisions. No part of the Material may be used, copied, reproduced, modified,
+        published, uploaded, posted, transmitted, distributed, or disclosed in any way
+        without Intel's prior express written permission.
+
+        No license under any patent, copyright, trade secret or other intellectual
+        property right is granted to or conferred upon you by disclosure or delivery
+        of the Materials, either expressly, by implication, inducement, estoppel or
+        otherwise. Any license under such intellectual property rights must be
+        express and approved by Intel in writing.
+
+        Unless otherwise agreed by Intel in writing, you may not remove or alter
+        this notice or any other notice embedded in Materials by Intel or
+        Intel's suppliers or licensors in any way.
+      **/
+
+      #include <vector>
+      #include "gtest/gtest.h"
+      #include "gmock/gmock.h"
+
+      extern "C" {
+      #include <IpSimLib.h>
+      #include <__IPNAME__.h>
+      #include <IpSimSupport.h>
+      #include <IpSimRegMap.h>
+
+      extern void InitTest (int *argc, char *argv[]);
+      extern void RunAllTests ();
+      }
+
+
+      using ::testing::AllOf;
+      using ::testing::AnyOf;
+      using ::testing::Ge;
+      using ::testing::Le;
+      using ::testing::Eq;
+
+      // These functions are called in IpSimMain.c which are responsible to initialize and trigger testing framework.
+      void InitTest (int *argc, char *argv[]) {
+        ::testing::InitGoogleTest (argc, argv);
+      }
+      void RunAllTests () {
+        RUN_ALL_TESTS ();
+      }
+
+      // Custom data structure for parameters passed into the test cases.
+      typedef struct {
+        __IPNAMEUPPERCASE___INST  *Inst;
+        UINT8  Socket;
+        UINT8  Port;
+        UINT32  OtherParameter;
+      } TestParam;
+
+      // Custom class which is for TEST_P and can have it's own custom definitions of member data and functions.
+      // People who write c++ can do their own customizations in terms of flexibility of usage.
+      class __IPNAME__ : public ::testing::TestWithParam<TestParam> {
+      public:
+        __IPNAMEUPPERCASE___INST *Inst;
+        UINT8 Socket;
+        UINT8 Port;
+        UINT32 OtherParameter;
+        __IPNAME__ () : Inst (GetParam ().Inst),
+                    Socket (GetParam ().Socket),
+                    Port (GetParam ().Port),
+                    OtherParameter (GetParam ().OtherParameter) {}
+      };
+
+      // This function return the parameters passed into the test cases as a c++ vector.
+      std::vector<TestParam> InitParam () {
+        std::vector<TestParam> params;
+        for (UINT8 Socket = 0; Socket < MAX_SOCKET; Socket++) {
+          for (UINT8 Port = 0; Port < MAX_PORT_PER_SOCKET; Port++) {
+            params.push_back({&m__IPNAME__InstancesPtr[Socket][Port], Socket, Port, 0});
+          }
+        }
+        return params;
+      }
+
+      // This is the API which sets up the test cases passed in and binds them to the corresponding test fixtures.
+      // Note: 1st argument is the user defined name, namely it can be changed.
+      //       2nd argument is the test suite name(class name defined as above).
+      //       3rd argument takes the vector of parameters
+      INSTANTIATE_TEST_SUITE_P (TEST01,
+                                __IPNAME__,
+                                testing::ValuesIn (InitParam ()));
+
+      // TEST_P stands for Test with Parameters
+      // Note: 1st argument is the test suite name(class name defined as above).
+      //       2nd argument is the user defined name, namely it can be changed.
+      TEST_P (__IPNAME__, SomeTests1)
+      {
+        EXPECT_TRUE (true);
+      }
+
+      // TEST_P stands for Test with Parameters
+      // Note: 1st argument is the test suite name(class name defined as above).
+      //       2nd argument is the user defined name, namely it can be changed.
+      TEST_P (__IPNAME__, GetVersion)
+      {
+        EXPECT_EQ (__IPNAME__GetVersion (Inst, IpCsiVerIdCsi), VERSION_CSI);
+        EXPECT_EQ (__IPNAME__GetVersion (Inst, IpCsiVerIdHwIp), 0);
+        EXPECT_EQ (__IPNAME__GetVersion (Inst, IpCsiVerIdIpFwIntf), 0);
+        EXPECT_EQ (__IPNAME__GetVersion (Inst, IpCsiVerIdIpFwIntfExt), 0);
+        EXPECT_EQ (__IPNAME__GetVersion (Inst, IpCsiVerIdIpFw), 0);
+        EXPECT_EQ (__IPNAME__GetVersion (Inst, IpCsiVerIdHwIpCustom), 0);
+        EXPECT_EQ (__IPNAME__GetVersion (Inst, (IP_CSI_VER_ID)0xFFFFFFFF), 0);
+      }
+
+      // TEST_P stands for Test with Parameters
+      // Note: 1st argument is the test suite name(class name defined as above).
+      //       2nd argument is the user defined name, namely it can be changed.
+      TEST_P (__IPNAME__, SetEvent)
+      {
+        EXPECT_EQ (__IPNAME__SetEvent (Inst, 0, __IPNAME__EventIdUnknown, 0), IpCsiStsSuccess);
+      }
+
+      // TEST_P stands for Test with Parameters
+      // Note: 1st argument is the test suite name(class name defined as above).
+      //       2nd argument is the user defined name, namely it can be changed.
+      TEST_P (__IPNAME__, GetCapability)
+      {
+        IP_CSI_STATUS  ApiSts;
+        EXPECT_EQ (__IPNAME__GetCapability (Inst, 0, __IPNAME__FeatIdUnknown, &ApiSts), __IPNAME__FeatValDis);
+        EXPECT_EQ (ApiSts, IpCsiStsSuccess);
+      }
+
+      // TEST_P stands for Test with Parameters
+      // Note: 1st argument is the test suite name(class name defined as above).
+      //       2nd argument is the user defined name, namely it can be changed.
+      TEST_P (__IPNAME__, GetStatus)
+      {
+        IP_CSI_STATUS  ApiSts;
+        EXPECT_EQ (__IPNAME__GetStatus (Inst, 0, __IPNAME__FeatIdUnknown, &ApiSts), __IPNAME__FeatValDis);
+        EXPECT_EQ (ApiSts, IpCsiStsSuccess);
+      }
+
+      // TEST_P stands for Test with Parameters
+      // Note: 1st argument is the test suite name(class name defined as above).
+      //       2nd argument is the user defined name, namely it can be changed.
+      TEST_P (__IPNAME__, GetControl)
+      {
+        IP_CSI_STATUS  ApiSts;
+        EXPECT_EQ (__IPNAME__GetControl (Inst, 0, __IPNAME__FeatIdUnknown, &ApiSts), __IPNAME__FeatValDis);
+        EXPECT_EQ (ApiSts, IpCsiStsSuccess);
+      }
+
+      // TEST_P stands for Test with Parameters
+      // Note: 1st argument is the test suite name(class name defined as above).
+      //       2nd argument is the user defined name, namely it can be changed.
+      TEST_P (__IPNAME__, SetControl)
+      {
+        EXPECT_EQ (__IPNAME__SetControl (Inst, 0, __IPNAME__FeatIdUnknown, __IPNAME__FeatValDis), IpCsiStsSuccess);
+        EXPECT_EQ (__IPNAME__SetControl (Inst, 0, __IPNAME__FeatIdUnknown, 0xFFFFFFFF), IpCsiStsSuccess);
+      }
+
+
+...
