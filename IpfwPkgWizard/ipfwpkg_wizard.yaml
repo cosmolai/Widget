@@ -103,6 +103,8 @@ filelist:
       typedef struct ___IPNAMEUPPERCASE___INST __IPNAMEUPPERCASE___INST;
       struct ___IPNAMEUPPERCASE___INST {
         IP_CSI_INST_PREFIX  Prefix;
+        IP_WR_REG_CNTXT  EndPoint0Cntxt;
+        IP_WR_REG_CNTXT  EndPoint1Cntxt;
         //<=== NOTE: add new fields to end for backwards compatibility
       };
 
@@ -280,6 +282,8 @@ filelist:
       #include <__IPNAME__.h>
       #include <IpWrapper.h>
       #include <IpWrapper64Bit.h>
+      #include <ENDPOINT0.h>
+      #include <ENDPOINT1.h>
 
       /**
         Get version information
@@ -460,6 +464,12 @@ filelist:
         __IPNAMEUPPERCASE___INST  *pInst
         )
       {
+        IpWrRegWrite (pInst->EndPoint0Cntxt, EP0_REG0_REG, 0x55AA55AA, IpWrRegFlagSize32Bits);
+        IpWrRegWrite (pInst->EndPoint0Cntxt, EP0_REG1_REG, 0xAA55AA55, IpWrRegFlagSize32Bits);
+
+        IpWrRegWrite (pInst->EndPoint1Cntxt, EP1_REG0_REG, 0x55AA55AA, IpWrRegFlagSize32Bits);
+        IpWrRegWrite (pInst->EndPoint1Cntxt, EP1_REG1_REG, 0xAA55AA55, IpWrRegFlagSize32Bits);
+
         return IpCsiStsSuccess;
       }
 
@@ -1035,8 +1045,17 @@ filelist:
         void
         )
       {
+        UINT8 Socket;
+        UINT8 Port;
         printf ("%s\n", __FUNCTION__);
-        //assert (1 != 1);
+        for (Socket = 0; Socket < MAX_SOCKET; Socket++) {
+          for (Port = 0; Port < MAX_PORT_PER_SOCKET; Port++) {
+            mIpUsb4InstancesPtr[Socket][Port].EndPoint0Cntxt = (IP_WR_REG_CNTXT)(UINTN)IpSimGetRegMap (ENDPOINT0, Socket, Port);
+            mIpUsb4InstancesPtr[Socket][Port].EndPoint1Cntxt = (IP_WR_REG_CNTXT)(UINTN)IpSimGetRegMap (ENDPOINT1, Socket, Port);
+
+            IpUsb4InstInit (&mIpUsb4InstancesPtr[Socket][Port]);
+          }
+        }
       }
 
       /**
@@ -1048,8 +1067,14 @@ filelist:
         void
         )
       {
+        UINT8 Socket;
+        UINT8 Port;
         printf ("%s\n", __FUNCTION__);
-        //assert (2 != 2);
+        for (Socket = 0; Socket < MAX_SOCKET; Socket++) {
+          for (Port = 0; Port < MAX_PORT_PER_SOCKET; Port++) {
+            IpUsb4IpInit (&mIpUsb4InstancesPtr[Socket][Port]);
+          }
+        }
       }
 
       /**
@@ -1145,6 +1170,8 @@ filelist:
       #include <__IPNAME__.h>
       #include <IpSimSupport.h>
       #include <IpSimRegMap.h>
+      #include <ENDPOINT0.h>
+      #include <ENDPOINT1.h>
 
       extern void InitTest (int *argc, char *argv[]);
       extern void RunAllTests ();
@@ -1211,7 +1238,10 @@ filelist:
       //       2nd argument is the user defined name, namely it can be changed.
       TEST_P (__IPNAME__, SomeTests1)
       {
-        EXPECT_TRUE (true);
+        EXPECT_EQ (IpSimDirectReadRegMap (EP0_REG0_ENDPOINT, Socket, Port, EP0_REG0_REG, EP0_REG0_WIDTH), 0x55AA55AA);
+        EXPECT_EQ (IpSimDirectReadRegMap (EP0_REG1_ENDPOINT, Socket, Port, EP0_REG1_REG, EP0_REG1_WIDTH), 0xAA55AA55);
+        EXPECT_EQ (IpSimDirectReadRegMap (EP1_REG0_ENDPOINT, Socket, Port, EP1_REG0_REG, EP1_REG0_WIDTH), 0x55AA55AA);
+        EXPECT_EQ (IpSimDirectReadRegMap (EP1_REG1_ENDPOINT, Socket, Port, EP1_REG1_REG, EP1_REG1_WIDTH), 0xAA55AA55);
       }
 
       // TEST_P stands for Test with Parameters
