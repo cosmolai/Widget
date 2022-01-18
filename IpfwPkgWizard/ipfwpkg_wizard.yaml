@@ -1050,10 +1050,10 @@ filelist:
         printf ("%s\n", __FUNCTION__);
         for (Socket = 0; Socket < MAX_SOCKET; Socket++) {
           for (Port = 0; Port < MAX_PORT_PER_SOCKET; Port++) {
-            mIpUsb4InstancesPtr[Socket][Port].EndPoint0Cntxt = (IP_WR_REG_CNTXT)(UINTN)IpSimGetRegMap (ENDPOINT0, Socket, Port);
-            mIpUsb4InstancesPtr[Socket][Port].EndPoint1Cntxt = (IP_WR_REG_CNTXT)(UINTN)IpSimGetRegMap (ENDPOINT1, Socket, Port);
+            m__IPNAME__InstancesPtr[Socket][Port].EndPoint0Cntxt = (IP_WR_REG_CNTXT)(UINTN)IpSimGetRegMap (ENDPOINT0, Socket, Port);
+            m__IPNAME__InstancesPtr[Socket][Port].EndPoint1Cntxt = (IP_WR_REG_CNTXT)(UINTN)IpSimGetRegMap (ENDPOINT1, Socket, Port);
 
-            IpUsb4InstInit (&mIpUsb4InstancesPtr[Socket][Port]);
+            __IPNAME__InstInit (&m__IPNAME__InstancesPtr[Socket][Port]);
           }
         }
       }
@@ -1072,7 +1072,7 @@ filelist:
         printf ("%s\n", __FUNCTION__);
         for (Socket = 0; Socket < MAX_SOCKET; Socket++) {
           for (Port = 0; Port < MAX_PORT_PER_SOCKET; Port++) {
-            IpUsb4IpInit (&mIpUsb4InstancesPtr[Socket][Port]);
+            __IPNAME__IpInit (&m__IPNAME__InstancesPtr[Socket][Port]);
           }
         }
       }
