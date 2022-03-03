@@ -14,35 +14,41 @@ import argparse
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-f', '--input_file', help='Input yaml file')
+    parser.add_argument('yaml_file', help='Input yaml file')
     args = parser.parse_args()
 
-    if args.input_file == None:
+    if args.yaml_file == None:
         parser.print_help()
         sys.exit(1)
 
-    if not os.path.exists(args.input_file):
+    if not os.path.exists(args.yaml_file):
         print('YAML file does not exist.')
         sys.exit(1)
 
-    with open(args.input_file, 'r') as f:
+    with open(args.yaml_file, 'r') as f:
         yaml_content = f.read()
 
     try:
         dictionaries = yaml.load_all(yaml_content, Loader=yaml.Loader)
-        index = 0
+        index = 1
         for dictionary in dictionaries:
+            print('####################')
             print('YAML document {}'.format(index))
+            print('####################')
             index = index + 1
             print(dictionary)
-            print()
-            print()
+            print("")
+            print("")
     except yaml.YAMLError as e:
-        print('YAML formattting error!!!')
         print(str(e))
+        print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+        print('!!  YAML formattting error!!!  !!')
+        print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
         sys.exit (1)
 
-    print('YAML formatting correct.')
+    print('#################################')
+    print('##  YAML formatting correct.   ##')
+    print('#################################')
 
 
 if __name__ == "__main__":
