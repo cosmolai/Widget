@@ -117,6 +117,7 @@ class App(tk.Frame):
                     filepath = file['path']
                     filename = file['name']
                     filecontent = file['content']
+                    intelpath = intelpath.replace('\\','/')
                     filepath, filename, filecontent = self.replace_all_keyword(filepath, filename, filecontent, ipfwname, intelpath)
                     #print(filepath)
                     #print(filename)
